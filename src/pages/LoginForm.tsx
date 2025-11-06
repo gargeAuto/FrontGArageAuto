@@ -1,0 +1,208 @@
+import {useContext, useEffect, useState} from "react";
+import {
+    Card,
+    CardHeader,
+    CardContent,
+    Stack,
+    TextField,
+    Button,
+    Typography,
+    Alert,
+    IconButton,
+    InputAdornment,
+    Link,
+    Box
+} from "@mui/material";
+import {Visibility, VisibilityOff, Lock} from "@mui/icons-material";
+import {Link as RouterLink, useLocation, useNavigate} from "react-router";
+import {UserContexte} from "../AllContexte/UserContexte.tsx";
+import api from "../api.ts";
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const CONFIRM_PATH = "/confirmation-appointment";
+
+type LoginFormProps = {
+    onSuccess?: () => void;
+    loginFn?: (email: string, password: string) => Promise<void>;
+};
+
+const LoginForm = ({onSuccess, loginFn}: LoginFormProps) => {
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [showPwd, setShowPwd] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const {isLogUser, setIsLogUser} = useContext(UserContexte);
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+
+    const canSubmit = emailRegex.test(email) && password.length >= 4 && !loading;
+
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        if (!canSubmit) return;
+
+        setError(null);
+        setLoading(true);
+        try {
+            if (loginFn) {
+                await loginFn(email, password);
+            } else {
+                const data =  await api.post("/login", {
+                    email,
+                    password,
+                });
+                localStorage.setItem("af.account", data.data.token);
+                navigate(from, {replace: true});
+
+            }
+            onSuccess?.();
+            setIsLogUser(!!localStorage.getItem("af.account"))
+
+        } catch(error){
+            setError((error as Error).message);
+        } finally {
+            setLoading(false);
+
+
+        }
+    }
+
+   /* async function sendAppointmentAfterLogin(): Promise<ConfirmationPayload | null> {
+        const selection = localStorage.getItem("ac.selection");
+        const account = localStorage.getItem("ac.account");
+        if (!selection || !account) return null;
+
+        const parsed = JSON.parse(selection);
+        const id = parsed.id as number;
+        const appointment = parsed.appointment;
+        const startDate = appointment?.start as string;
+        const endDate = appointment?.end as string;
+        const services = (parsed.services as number[]) ?? [];
+
+        const immat = parsed.immat as string | undefined;
+        const km = parsed.km as string | number | undefined;
+        const make = parsed.make as string | undefined;
+        const model = parsed.model as string | undefined;
+        const year = parsed.year as number | undefined;
+
+
+        try {
+            await postAppointment(account, id, startDate, endDate, services, 1);
+        } catch {
+        }
+
+        try {
+            await postCar(account, immat, km, make, model, year);
+        } catch {
+
+        }
+
+
+        return {
+            start: startDate,
+            end: endDate,
+            id,
+            name: parsed.name,
+            codePostal: parsed.codePostal,
+            libelleCommune: parsed.libelleCommune,
+            immat,
+            make,
+            model,
+            year,
+            services,
+        };
+    }*/
+
+    return (
+        <Box sx={{ height: "100vh", width: "100vw", display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <Card
+                sx={{
+                    width: "100%",
+                    maxWidth: 520,
+                    borderRadius: 3,
+                    overflow: "hidden",
+                    boxShadow: "0 10px 28px rgba(0,0,0,.10)",
+                }}
+            >
+                <CardHeader
+                    avatar={<Lock sx={{color: "white"}}/>}
+                    title={<Typography variant="h6" fontWeight={800}>Connexion</Typography>}
+                    subheader={
+                        <Typography variant="caption" sx={{color: "rgba(255,255,255,.9)"}}>
+                            Connectez-vous pour finaliser votre rendez-vous
+                        </Typography>
+                    }
+                    sx={{color: "white", "& .MuiCardHeader-title": {fontWeight: 800}}}
+                />
+
+                <CardContent sx={{p: 3}}>
+                    <form onSubmit={handleSubmit} noValidate>
+                        <Stack spacing={2}>
+                            {error && <Alert severity="error">{error}</Alert>}
+
+                            <TextField
+                                label="Email"
+                                value={email}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                                type="email"
+                                autoComplete="email"
+                                required
+                                fullWidth
+                                slotProps={{input: {inputProps: {maxLength: 120}}}}
+                            />
+
+                            <TextField
+                                label="Mot de passe"
+                                value={password}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                                type={showPwd ? "text" : "password"}
+                                autoComplete="current-password"
+                                required
+                                fullWidth
+                                slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="afficher/masquer le mot de passe"
+                                                    onClick={() => setShowPwd((v) => !v)}
+                                                    edge="end"
+                                                >
+                                                    {showPwd ? <VisibilityOff/> : <Visibility/>}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                        inputProps: {minLength: 4, maxLength: 120},
+                                    },
+                                }}
+                            />
+
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                disabled={!canSubmit}
+                                sx={{textTransform: "none", py: 1.1, borderRadius: 2}}
+
+                            >
+                                {loading ? "Connexion..." : "Se connecter"}
+                            </Button>
+
+                            <Typography variant="body2" sx={{textAlign: "center", opacity: 0.85}}>
+                                Pas de compte ?{" "}
+                                <Link component={RouterLink} to="/Register-Form" underline="hover">
+                                    Créer un compte
+                                </Link>
+                            </Typography>
+                        </Stack>
+                    </form>
+                </CardContent>
+            </Card>
+        </Box>
+
+    );
+};
+
+export default LoginForm;

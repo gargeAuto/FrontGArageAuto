@@ -3,19 +3,28 @@ import axios from 'axios'
 
 // Crée une instance avec les configs de base
 const api = axios.create({
-    baseURL: 'http://localhost:8080', // 🔹 ton backend Spring Boot
-    timeout: 5000,                    // temps max d'attente
+    baseURL: 'http://localhost:80/api/',
+    timeout: 5000,
     headers: {
         'Content-Type': 'application/json',
     },
 })
 
-// Optionnel : interceptors pour gérer les erreurs globalement
+
 api.interceptors.response.use(
-    response => response, // renvoie la réponse si ok
+    response => response,
     error => {
-        console.error('Erreur API:', error.response || error.message)
-        return Promise.reject(error)
+        let message = "Erreur inconnue";
+
+        if (error.response?.data?.message) {
+            message = error.response.data.message;
+        }
+
+        else if (error.message) {
+            message = error.message;
+        }
+
+        return Promise.reject(new Error(message));
     }
 )
 

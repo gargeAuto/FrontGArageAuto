@@ -5,14 +5,17 @@ import '../src/theme/theme.tsx'
 import {ThemeProvider, CssBaseline} from '@mui/material'
 import App from './App.tsx'
 import theme from "./theme/theme.tsx";
-import {RouterProvider} from "react-router-dom";
-import router from "./Router.tsx";
+import {ProviderUserLog} from "./AllContexte/ProviderUserLog.tsx";
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
           <ThemeProvider theme={theme}>
-              <CssBaseline/>
-                <App/>
+              <ProviderUserLog>
+                  <CssBaseline/>
+                  <App/>
+              </ProviderUserLog>
+
           </ThemeProvider>
 
 
