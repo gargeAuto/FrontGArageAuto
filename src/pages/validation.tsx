@@ -5,6 +5,8 @@ import DirectionsCarFilledIcon from "@mui/icons-material/DirectionsCarFilled";
 import {Link as RouterLink, useLocation} from "react-router";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
+import api from "../api.ts";
+import {useEffect} from "react";
 
 dayjs.locale("fr");
 
@@ -41,7 +43,9 @@ type SelectionLike = {
         year?: number;
     };
     services?: number[];
+    selectedStart?: string;
 };
+
 
 const fmt = (iso?: string) => (iso ? dayjs(iso).format("dddd D MMM YYYY • HH:mm") : "—");
 
@@ -52,26 +56,34 @@ const validation = () => {
         location?.state?.confirmation ?? location?.state?.selection ?? null;
 
 
-    if (!data) {
-        try {
-            const saved = localStorage.getItem("af.car");
-            if (saved) data = JSON.parse(saved);
-        } catch {
-        }
-    }
+
 
     const start = data?.appointment?.start ?? data?.date;
    // const end = data?.appointment?.end ?? data?.date;
     const services = data?.services ?? [];
     const cityLine = [data?.codePostal, data?.libelleCommune].filter(Boolean).join(" ");
 
-    const clearAppointmentStorage = () => {
-        try {
-            localStorage.removeItem("ac.selection");
-            localStorage.removeItem("ac.account");
 
-        } catch {
+           const saved = localStorage.getItem("af.car");
+           if (saved) data = JSON.parse(saved);
+
+
+
+     const clearAppointmentStorage = async () => {
+        try {
+
+             await api.post("/appointments", {
+                    carData: data?.carData,
+                 selectedStart: data?.selectedStart,
+                });
+                localStorage.removeItem("ac.selection");
+                localStorage.removeItem("ac.account");
+
+
+        } catch (error) {
+            console.error(error);
         }
+
     };
 
     return (
@@ -133,8 +145,6 @@ const validation = () => {
 
                         <Stack direction="row" spacing={2} justifyContent="center" sx={{pt: 1}}>
                             <Button
-                                component={RouterLink}
-                                to="/"
                                 variant="contained"
                                 onClick={clearAppointmentStorage}
                             >

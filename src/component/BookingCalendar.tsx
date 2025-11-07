@@ -135,7 +135,7 @@ const BookingCalendar = ({stepMin = 30,
                 return false;
             }
 
-            const car = {carData: setCarLocalStorage, date}; // pas besoin de double tableau
+            const car = {carData: setCarLocalStorage, selectedStart}; // pas besoin de double tableau
             localStorage.setItem("af.car", JSON.stringify(car));
             setError(null);
             return true;
@@ -214,7 +214,10 @@ const BookingCalendar = ({stepMin = 30,
                                         key={s.start}
                                         variant={selected ? "contained" : "outlined"}
                                         onClick={() => {
+
                                             setSelectedStart(s.start);
+                                            console.log(selectedStart)
+                                            console.log(date)
                                             setChoiseSlote(s)
                                         }}
                                         disabled={disabled}
