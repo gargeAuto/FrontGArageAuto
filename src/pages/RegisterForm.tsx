@@ -1,10 +1,12 @@
-import {useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Card, CardHeader, CardContent, Stack, TextField, Button, Typography, Alert, Link, Box} from "@mui/material";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import {Link as RouterLink} from "react-router";
+import {Link as RouterLink, useLocation} from "react-router";
 import axios from "axios";
 import type {CustomerRegisterPayload as RegisterPayload} from "../../types/login";
 import api from "../api.ts";
+import {useNavigate} from "react-router-dom";
+import {UserContexte} from "../AllContexte/UserContexte.tsx";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -31,6 +33,11 @@ const RegisterForm = ({onSuccess, registerFn}: RegisterFormProps) => {
         surname: null,
         phone: null,
     });
+    const [responseData, setResponseData] = useState(null);
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+    const navigate = useNavigate();
+    const {isLogUser, setIsLogUser} = useContext(UserContexte);
 
     const canSubmit =
         emailRegex.test(form.email) &&
@@ -40,6 +47,13 @@ const RegisterForm = ({onSuccess, registerFn}: RegisterFormProps) => {
         form.surname.trim().length >= 2 &&
         form.phone.trim().length >= 6 &&
         !loading;
+
+    useEffect(() => {
+        if (isLogUser) {
+            navigate(from, {replace: true});
+        }
+
+    }, [isLogUser]);
 
     function update<K extends keyof RegisterPayload>(key: K) {
         return (e) =>
@@ -53,7 +67,10 @@ const RegisterForm = ({onSuccess, registerFn}: RegisterFormProps) => {
         setError(null);
         setLoading(true);
         try {
-           await api.post("/signup", form);
+           const response = await  api.post("/signup", form);
+           console.log(response.data.message);
+           setResponseData(response.data.message);
+
         } catch (error) {
             setError((error as Error).message);
         } finally {
@@ -100,6 +117,7 @@ const RegisterForm = ({onSuccess, registerFn}: RegisterFormProps) => {
 
     return (
         <Box sx={{width: "100vw", display: "flex", alignItems: "center", justifyContent: "center", height:"100vh" }}>
+
             <Card
                 sx={{
                     width: "100%",
@@ -107,6 +125,8 @@ const RegisterForm = ({onSuccess, registerFn}: RegisterFormProps) => {
                     borderRadius: 3,
                     overflow: "hidden",
                     boxShadow: "0 10px 28px rgba(0,0,0,.10)",
+                    m: 20  ,
+                    maxHeight: 650,
                 }}
             >
                 <CardHeader
@@ -186,6 +206,7 @@ const RegisterForm = ({onSuccess, registerFn}: RegisterFormProps) => {
                                 fullWidth
 
                             />
+                            {responseData && <Alert>{responseData}</Alert>}
 
                             <Button type="submit" variant="contained" disabled={!canSubmit}
                                     sx={{textTransform: "none", py: 1.1, borderRadius: 2}}>

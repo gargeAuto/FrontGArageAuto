@@ -1,9 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {AppBar, Box, Button, Toolbar, Typography} from "@mui/material";
 import logoNavbard from "../assets/logoNavbard.jpg";
 import {styled} from "@mui/system";
 import {useNavigate} from "react-router-dom";
+import UserMenu from './UserMenu';
+import {UserContexte} from "../AllContexte/UserContexte.tsx";
+import {getUserRole} from "../configue/auth.tsx";
 
 const CustomAppBar = styled(AppBar)(({scrolled}) => ({
     backgroundColor: scrolled ? 'rgba(0,0,0)' : 'rgba(0,0,0,0)',
@@ -17,6 +20,7 @@ const NavBard = () => {
     const navigate = useNavigate();
         const [scrolled, setScrolled] = useState(false);
         const [bgBlack, setBgBlack] = useState(false);
+        const {isLogUser} = useContext(UserContexte);
 
         useEffect(() => {
             const handleScroll = () => {
@@ -43,7 +47,9 @@ const NavBard = () => {
                         component="img"
                         src={logoNavbard}
                         alt="logo"
-                        onClick={() => navigate("/")}
+                        onClick={() => {
+                            const path = getUserRole() === "admin" ? "/dashboard-garage" : "/";
+                            if (location.pathname !== path) navigate(path);}}
                         sx={{
                             width: 70,
                             height: 70,
@@ -71,10 +77,13 @@ const NavBard = () => {
                         L'Atelier Automobile de Ligueil
                     </Typography>
                 </Box>
-                <Box>
-                    <Button color="inherit" onClick={() => navigate("/Register-Form")}>Register</Button>
-                    <Button color="inherit" onClick={() => navigate("/Login-Form")} >Login</Button>
-                </Box>
+                {
+                    isLogUser ? <UserMenu></UserMenu> : <Box>
+                        <Button color="inherit" onClick={() => navigate("/Register-Form")}>Register</Button>
+                        <Button color="inherit" onClick={() => navigate("/Login-Form")}>Login</Button>
+                    </Box>
+                }
+
             </Toolbar>
         </CustomAppBar>
     )

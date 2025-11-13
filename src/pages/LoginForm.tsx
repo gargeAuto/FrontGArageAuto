@@ -17,6 +17,7 @@ import {Visibility, VisibilityOff, Lock} from "@mui/icons-material";
 import {Link as RouterLink, useLocation, useNavigate} from "react-router";
 import {UserContexte} from "../AllContexte/UserContexte.tsx";
 import api from "../api.ts";
+import {getUserRole} from "../configue/auth.tsx";
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const CONFIRM_PATH = "/confirmation-appointment";
@@ -55,7 +56,12 @@ const LoginForm = ({onSuccess, loginFn}: LoginFormProps) => {
                     password,
                 });
                 localStorage.setItem("af.account", data.data.token);
-                navigate(from, {replace: true});
+                const role = getUserRole();
+                if( role  === "admin"){
+                    navigate("dashboard-garage", {replace: true});
+                }else{
+                    navigate(from, {replace: true});
+                }
 
             }
             onSuccess?.();
@@ -192,7 +198,7 @@ const LoginForm = ({onSuccess, loginFn}: LoginFormProps) => {
 
                             <Typography variant="body2" sx={{textAlign: "center", opacity: 0.85}}>
                                 Pas de compte ?{" "}
-                                <Link component={RouterLink} to="/Register-Form" underline="hover">
+                                <Link component={RouterLink} to="/Register-Form" state={{from: location.state?.from}} underline="hover">
                                     Créer un compte
                                 </Link>
                             </Typography>

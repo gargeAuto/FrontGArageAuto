@@ -1,12 +1,12 @@
 
-import {Box, Card, CardContent, Stack, Typography, Chip, Button, Divider} from "@mui/material";
+import {Box, Card, CardContent, Stack, Typography, Chip, Button, Divider, Alert} from "@mui/material";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import DirectionsCarFilledIcon from "@mui/icons-material/DirectionsCarFilled";
-import {Link as RouterLink, useLocation} from "react-router";
+import {Link as RouterLink, useLocation, useNavigate} from "react-router";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import api from "../api.ts";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 dayjs.locale("fr");
 
@@ -51,14 +51,16 @@ const fmt = (iso?: string) => (iso ? dayjs(iso).format("dddd D MMM YYYY • HH:m
 
 const validation = () => {
     const location = useLocation() as { state?: any };
-
+ const [responseApi, setResponseApi] = useState<any>(null);
+ const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
     let data: SelectionLike | null =
         location?.state?.confirmation ?? location?.state?.selection ?? null;
 
 
 
 
-    const start = data?.appointment?.start ?? data?.date;
+    const start = data?.selectedStart;
    // const end = data?.appointment?.end ?? data?.date;
     const services = data?.services ?? [];
     const cityLine = [data?.codePostal, data?.libelleCommune].filter(Boolean).join(" ");
@@ -72,43 +74,43 @@ const validation = () => {
      const clearAppointmentStorage = async () => {
         try {
 
-             await api.post("/appointments", {
+            const response = await api.post("/appointments", {
                     carData: data?.carData,
                  selectedStart: data?.selectedStart,
                 });
+                setResponseApi(response.data.message);
                 localStorage.removeItem("ac.selection");
                 localStorage.removeItem("ac.account");
 
 
         } catch (error) {
-            console.error(error);
+            setError((error as Error).message);
         }
 
     };
 
     return (
         <Box sx={{height: "100vh", width: "100vw", display: "flex", alignItems: "center", justifyContent: "center"}}>
+
             <Card sx={{maxWidth: 720, mx: "auto", my: 3, borderRadius: 3, boxShadow: 3, minWidth: 400}}>
+                {error && <Alert severity="error">{error}</Alert>}
                 <CardContent>
                     <Stack spacing={2}>
 
                         <Stack direction="row" alignItems="center" spacing={1}>
                             <EventAvailableIcon/>
                             <Typography variant="subtitle1" fontWeight={700}>
-                                {fmt(start)}
+                                {fmt(data?.selectedStart)}
                             </Typography>
                         </Stack>
 
                         <Divider/>
 
                         <Stack spacing={0.5}>
-                            <Typography variant="overline" sx={{opacity: 0.8}}>
-                                Garage
-                            </Typography>
-                            <Typography variant="h6">{data?.name ?? `Garage #${data?.id ?? ""}`.trim()}</Typography>
+                            <Typography variant="h6">L'Atelier Automobile de Ligueil</Typography>
                             {cityLine && (
                                 <Typography variant="body2" sx={{opacity: 0.9}}>
-                                    {cityLine}
+                                    L'Atelier Automobile de Ligueil
                                 </Typography>
                             )}
                         </Stack>
@@ -142,14 +144,21 @@ const validation = () => {
                                 </Stack>
                             </>
                         )}
-
+                        {responseApi && <Alert>{responseApi}</Alert>}
                         <Stack direction="row" spacing={2} justifyContent="center" sx={{pt: 1}}>
-                            <Button
-                                variant="contained"
-                                onClick={clearAppointmentStorage}
-                            >
-                                valider
-                            </Button>
+                            {
+                              !responseApi ? <Button
+                                    variant="contained"
+                                    onClick={clearAppointmentStorage}
+                                >
+                                    valider
+                                </Button> : <Button
+                                  variant="contained"
+                                  onClick={() => navigate("/")}
+                              >
+                                  page d acceuil
+                              </Button>
+                            }
                         </Stack>
                     </Stack>
                 </CardContent>
