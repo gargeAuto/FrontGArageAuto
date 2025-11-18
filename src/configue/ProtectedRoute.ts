@@ -1,8 +1,12 @@
-import {useEffect} from "react";
+import {type ReactNode, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {getUserRole, isTokenExpired} from "./auth";
 
-const ProtectedRoute = ({children, role}) => {
+interface ProtectedRouteProps {
+    role: string;
+    children: ReactNode;
+}
+const ProtectedRoute = ({ role, children}: ProtectedRouteProps) => {
     const navigate = useNavigate();
     const userRole = getUserRole();
 

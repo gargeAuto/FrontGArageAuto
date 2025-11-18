@@ -6,7 +6,7 @@ const LayoutWithoutFooter = () => {
     return (
         <Box>
             <NavBard/>
-            <Outlet></Outlet>
+            <Outlet/>
         </Box>
 
 
