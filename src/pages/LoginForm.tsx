@@ -36,7 +36,7 @@ const LoginForm = ({onSuccess, loginFn}: LoginFormProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const {isLogUser, setIsLogUser} = useContext(UserContexte);
-    const location = useLocation();
+   const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
     const canSubmit = emailRegex.test(email) && password.length >= 4 && !loading;
@@ -57,10 +57,10 @@ const LoginForm = ({onSuccess, loginFn}: LoginFormProps) => {
                 });
                 localStorage.setItem("af.account", data.data.token);
                 const role = getUserRole();
-                if( role  === "admin"){
-                    navigate("dashboard-garage", {replace: true});
+                if( role  === "admin" || role === "technicien"){
+                    return navigate("/dashboard-garage", {replace: true});
                 }else{
-                    navigate(from, {replace: true});
+                    navigate(from, {replace: false});
                 }
 
             }

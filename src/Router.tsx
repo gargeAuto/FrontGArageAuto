@@ -13,16 +13,17 @@ import LayoutWithoutFooter from "./Layout/LayoutWithoutFooter.tsx";
 
 
 const router = createBrowserRouter([
+
     {
         path: "validation-email",
         element: <EmailValidation/>,
     },
     {
-        path: "dashboard-garage",
+        path: "/",
         element: <LayoutWithoutFooter/>,
         children: [
             {
-                path: "", element: <ProtectedRoute role={"admin"}>
+                path: "dashboard-garage", element: <ProtectedRoute role={"admin"}>
                     <LayoutWithoutFooter/>
                     <DashboardGaragiste/>
                 </ProtectedRoute>,

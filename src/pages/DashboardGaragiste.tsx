@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import api from "../api.ts";
-import {Alert, Box } from "@mui/material";
+import {Alert, Box} from "@mui/material";
 import DashboardAppointmentsGrid from "../component/DashboardAppointmentsGrid.tsx";
 import CustomerCards from "../component/CustomerCards.tsx";
 
@@ -15,17 +15,19 @@ const DashboardGaragiste = () => {
                 const responseUsers = await api.get("/newusers");
                 const responseAppointments = await api.get("/appointments-per-day");
 
-                if (responseUsers.data?.data) {
-                    setUsers(responseUsers.data.data);
+                if (responseUsers.data?.data.data) {
+                    setUsers(responseUsers.data.data.data);
+                    console.log(responseUsers.data?.data.data);
                 } else {
                     setError("Aucun utilisateur trouvé");
                 }
 
-                if (responseAppointments.data?.data) {
-                    setAppointments(responseAppointments.data.data);
-                } else {
-                    setError("Aucun rendez-vous trouvé");
-                }
+                            if (responseAppointments.data?.data) {
+                                setAppointments(responseAppointments.data.data);
+                                console.log(responseAppointments.data.data);
+                            } else {
+                                setError("Aucun rendez-vous trouvé");
+                            }
 
             } catch (err: any) {
                 setError(err.message || "Erreur inconnue");

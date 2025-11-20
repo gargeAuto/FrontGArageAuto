@@ -37,7 +37,7 @@ export default function CustomerCards({customer}) {
                         <Stack spacing={0.5}>
                             <Typography variant="body1">{customer.cars[0].model}</Typography>
                             <Typography variant="caption" color="text.secondary">
-                                {customer.cars[0].plate}
+                                {customer.cars[0].immat}
                             </Typography>
                         </Stack>
                     ) : (

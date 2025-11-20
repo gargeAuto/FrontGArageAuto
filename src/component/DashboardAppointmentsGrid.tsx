@@ -29,29 +29,34 @@ export default function DashboardAppointmentsGrid({appointments = []}) {
 
     const columns = [
         {
-            field: "start",
+            field: "selectedStart",
             headerName: "Heure",
             width: 110,
             valueGetter: (params) => {
-                const d = params.value ? new Date(params.row.selectedStart) : null;
-                return d ? d.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}) : "-";
+                const start = params.row?.selectedStart;
+                const d = start ? new Date(start) : null;
+                console.log(start);
+                return d
+                    ? d.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
+                    : "-";
             },
+
         },
-        {field: "clientName", headerName: "Client", width: 160},
-        {field: "vehicle", headerName: "Véhicule", width: 140},
+        {field: "customer_name", headerName: "Client", width: 160},
+        {field: "car_immat", headerName: "Véhicule", width: 140},
         {
-            field: "service",
+            field: "service_wording",
             headerName: "Service",
             width: 140,
             renderCell: (params) => <Chip label={params.value || "—"} color="primary" variant="outlined" size="small"/>,
         },
         {
-            field: "duration",
+            field: "service_delay",
             headerName: "Durée",
             width: 100,
             renderCell: (params) => <Chip label={params.value || "30m"} color="secondary" size="small"/>,
         },
-        {field: "note", headerName: "Note", width: 180},
+
     ];
 
     return (
@@ -67,7 +72,7 @@ export default function DashboardAppointmentsGrid({appointments = []}) {
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    getRowId={(r) => r.id}
+                    getRowId={(r) => r.appointment_id ?? ""}
                     sx={{border: "none"}}
                     initialState={{pagination: {paginationModel: {pageSize: 8}}}}
                     pageSizeOptions={[5, 8, 12, 24]}
