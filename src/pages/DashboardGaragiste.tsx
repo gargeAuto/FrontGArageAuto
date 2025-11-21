@@ -38,6 +38,7 @@ const DashboardGaragiste = () => {
     }, []);
 
     return (
+
         <Box sx={{display: "flex", flexDirection: "row", gap: 2, width: "100%", padding: 2, alignItems: "flex-start",
             mt: "60px"}}>
             <Box sx={{flex: 1}}>
