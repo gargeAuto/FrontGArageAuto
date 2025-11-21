@@ -58,7 +58,7 @@ const LoginForm = ({onSuccess, loginFn}: LoginFormProps) => {
                 localStorage.setItem("af.account", data.data.token);
                 const role = getUserRole();
                 if( role  === "admin" || role === "technicien"){
-                    return navigate("/dashboard-garage", {replace: true});
+                    navigate("/dashboard-garage", {replace: true});
                 }else{
                     navigate(from, {replace: false});
                 }

@@ -32,18 +32,58 @@ export default function DashboardAppointmentsGrid({appointments = []}) {
             field: "selectedStart",
             headerName: "Heure",
             width: 110,
-            valueGetter: (params) => {
-                const start = params.row?.selectedStart;
-                const d = start ? new Date(start) : null;
-                console.log(start);
-                return d
-                    ? d.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
-                    : "-";
-            },
+            renderCell: (params) => {
+                const start = params.row.selectedStart;
+                if (!start) return "-";
+
+                const normalized = start.replace(" ", "T");
+                const d = new Date(normalized);
+
+                const formatted = d.toLocaleTimeString("fr-FR", {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+                return (
+                    <Chip
+                        label={formatted}
+                        size="small"
+                        color="info"
+                        variant="outlined"
+                        sx={{fontWeight: 600}}
+                    />
+                );
+            }
 
         },
         {field: "customer_name", headerName: "Client", width: 160},
-        {field: "car_immat", headerName: "Véhicule", width: 140},
+        {field: "car_immat", headerName: "Véhicule",
+            renderCell: (params) => {
+                const {car_make, car_model, car_immat, car_km} = params.row;
+
+                return (
+                    <Stack spacing={0.3}>
+                        <Typography sx={{fontWeight: 600, fontSize: "0.85rem"}}>
+                            {car_make || "Marque ?"} {car_model || ""}
+                        </Typography>
+
+                        <Typography sx={{fontSize: "0.75rem", opacity: 0.8}}>
+                            Immat : {car_immat || "—"}
+                        </Typography>
+
+                        {car_km && (
+                            <Chip
+                                label={`${car_km} km`}
+                                size="small"
+                                color="secondary"
+                                variant="outlined"
+                                sx={{fontSize: "0.65rem"}}
+                            />
+                        )}
+                    </Stack>
+                );
+            },
+            width: 140},
         {
             field: "service_wording",
             headerName: "Service",
@@ -60,7 +100,7 @@ export default function DashboardAppointmentsGrid({appointments = []}) {
     ];
 
     return (
-        <Box sx={{display: "flex", flexDirection: "column" , alignItems: "center", mb: 2, mt:"60px"}}>
+        <Box sx={{display: "flex", flexDirection: "column" , alignItems: "center", }}>
             <Stack sx={{display: "flex", flexDirection: "row", alignItems: "center", mb: 2}}>
                 <Typography variant="h5">Rendez-vous aujourd'hui</Typography>
                 <Stack >
