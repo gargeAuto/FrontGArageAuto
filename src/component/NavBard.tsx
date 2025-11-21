@@ -1,4 +1,4 @@
-import React, {JSX, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {AppBar, Box, Button, Toolbar, Typography} from "@mui/material";
 import logoNavbard from "../assets/logoNavbard.jpg";
@@ -7,7 +7,6 @@ import {useNavigate} from "react-router-dom";
 import UserMenu from './UserMenu';
 import {UserContexte} from "../AllContexte/UserContexte.tsx";
 import {getUserRole} from "../configue/auth.tsx";
-import CustomerCards from "./CustomerCards.tsx";
 
 const CustomAppBar = styled(AppBar)(({scrolled}) => ({
     backgroundColor: scrolled ? 'rgba(0,0,0)' : 'rgba(0,0,0,0)',
@@ -17,7 +16,7 @@ const CustomAppBar = styled(AppBar)(({scrolled}) => ({
     WebkitBackdropFilter: 'none !important'
 }));
 
-const NavBard = ({children}) => {
+const NavBard = () => {
     const navigate = useNavigate();
         const [scrolled, setScrolled] = useState(false);
         const [bgBlack, setBgBlack] = useState(false);
@@ -66,10 +65,17 @@ const NavBard = ({children}) => {
                             },
                         }}
                     />
-
-                    {children}
-
-
+                    <Typography
+                        variant="h6"
+                        fontWeight="bold"
+                        sx={{
+                            color: "white",
+                            textShadow: "0 0 10px rgba(0,0,0,0.6)",
+                            letterSpacing: 0.5,
+                        }}
+                    >
+                        L'Atelier Automobile de Ligueil
+                    </Typography>
                 </Box>
                 {
                     isLogUser ? <UserMenu></UserMenu> : <Box>

@@ -13,7 +13,6 @@ const DashboardGaragiste = () => {
         const fetchData = async () => {
             try {
                 const responseUsers = await api.get("/newusers");
-              //  const responseUsersSearch = await api.get("/getUserSearch");
                 const responseAppointments = await api.get("/appointments-per-day");
 
                 if (responseUsers.data?.data.data) {
@@ -23,12 +22,12 @@ const DashboardGaragiste = () => {
                     setError("Aucun utilisateur trouvé");
                 }
 
-                if (responseAppointments.data?.data) {
-                    setAppointments(responseAppointments.data.data);
-                    console.log(responseAppointments.data.data);
-                } else {
-                    setError("Aucun rendez-vous trouvé");
-                }
+                            if (responseAppointments.data?.data) {
+                                setAppointments(responseAppointments.data.data);
+                                console.log(responseAppointments.data.data);
+                            } else {
+                                setError("Aucun rendez-vous trouvé");
+                            }
 
             } catch (err: any) {
                 setError(err.message || "Erreur inconnue");
@@ -39,13 +38,19 @@ const DashboardGaragiste = () => {
     }, []);
 
     return (
-        <Box sx={{display: "flex", flexDirection: "row", gap: 2, width: "100%", padding: 2, alignItems: "flex-start"}}>
-
+        <Box sx={{display: "flex", flexDirection: "row", gap: 2, width: "100%", padding: 2, alignItems: "flex-start",
+            mt: "60px"}}>
             <Box sx={{flex: 1}}>
                 <DashboardAppointmentsGrid appointments={appointments}/>
             </Box>
-
-            <Box sx={{flex: 1}}>
+            <Box
+                sx={{
+                    flex: 1,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: 2,
+                }}
+            >
                 {error && <Alert>{error}</Alert>}
 
                 {users.map(user => (
