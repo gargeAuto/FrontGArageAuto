@@ -22,6 +22,20 @@ const router = createBrowserRouter([
         element: <EmailValidation/>,
     },
     {
+        path: "/dashboard-garage",
+        element: <LayoutWithoutFooter/>,
+        children: [
+            {
+                path: "", element: <ProtectedRoute role={"admin"}>
+                    <LayoutWithoutFooter/>
+                    <DashboardGaragiste/>
+                </ProtectedRoute>,
+            }
+        ],
+
+
+    },
+    {
         //loader: , // données préchargées avant rendu
         // errorElement: <p>Erreur lors du chargement des voitures</p>, // affichage si loader échoue
         path: "/",

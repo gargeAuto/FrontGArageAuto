@@ -47,6 +47,7 @@ const DashboardGaragiste = () => {
 
             <Box sx={{flex: 1}}>
                 {error && <Alert>{error}</Alert>}
+
                 {users.map(user => (
                     <CustomerCards customer={user} key={user.id}/>
                 ))}
