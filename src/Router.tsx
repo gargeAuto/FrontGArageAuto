@@ -19,11 +19,11 @@ const router = createBrowserRouter([
         element: <EmailValidation/>,
     },
     {
-        path: "/",
+        path: "/dashboard-garage",
         element: <LayoutWithoutFooter/>,
         children: [
             {
-                path: "dashboard-garage", element: <ProtectedRoute role={"admin"}>
+                path: "", element: <ProtectedRoute role={"admin"}>
                     <LayoutWithoutFooter/>
                     <DashboardGaragiste/>
                 </ProtectedRoute>,

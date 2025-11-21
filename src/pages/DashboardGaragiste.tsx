@@ -38,12 +38,21 @@ const DashboardGaragiste = () => {
     }, []);
 
     return (
-        <Box sx={{display: "flex", flexDirection: "row", gap: 2, width: "100%", padding: 2, alignItems: "flex-start"}}>
+        <Box sx={{display: "flex", flexDirection: "row", gap: 2, width: "100%", padding: 2, alignItems: "flex-start",
+            mt: "60px"}}>
             <Box sx={{flex: 1}}>
                 <DashboardAppointmentsGrid appointments={appointments}/>
             </Box>
-            <Box sx={{flex: 1}}>
+            <Box
+                sx={{
+                    flex: 1,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gap: 2,
+                }}
+            >
                 {error && <Alert>{error}</Alert>}
+
                 {users.map(user => (
                     <CustomerCards customer={user} key={user.id}/>
                 ))}
