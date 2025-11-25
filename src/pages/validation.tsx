@@ -5,7 +5,7 @@ import DirectionsCarFilledIcon from "@mui/icons-material/DirectionsCarFilled";
 import {Link as RouterLink, useLocation, useNavigate} from "react-router";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import api from "../api.ts";
+import api from "../api/api.ts";
 import {useEffect, useState} from "react";
 
 dayjs.locale("fr");

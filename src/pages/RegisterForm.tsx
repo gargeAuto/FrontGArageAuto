@@ -4,7 +4,7 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import {Link as RouterLink, useLocation} from "react-router";
 import axios from "axios";
 import type {CustomerRegisterPayload as RegisterPayload} from "../../types/login";
-import api from "../api.ts";
+import api from "../api/api.ts";
 import {useNavigate} from "react-router-dom";
 import {UserContexte} from "../AllContexte/UserContexte.tsx";
 

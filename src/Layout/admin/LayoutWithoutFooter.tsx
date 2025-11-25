@@ -8,7 +8,9 @@ const LayoutWithoutFooter = () => {
     return (
         <Box>
             <NavBard><NavBarButtons/></NavBard>
+            <Box sx={{ mt: 10 }}>
             <Outlet/>
+            </Box>
         </Box>
 
     )
