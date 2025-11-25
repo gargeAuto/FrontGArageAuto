@@ -2,18 +2,25 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import {Avatar, Button, Card, CardActions, CardContent, CardHeader, Divider, Stack, Typography,} from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
+import {useNavigate} from "react-router-dom";
 
 // Composant intermédiaire : petites fiches client + bouton "Voir plus" pour afficher toutes les voitures
 // Usage: <CustomerCards customers={customersArray} />
 // customersArray = [{ id, firstName, lastName, email, cars: [{ id, model, plate }] }, ...]
 
 export default function CustomerCards({customer}) {
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const customerForm =  {
+        name: customer.name,
+        email: customer.email,
+    }
 
     if (!customer) return null;
+    if (!customerForm) return null;
 
     return (
         <>
@@ -50,7 +57,10 @@ export default function CustomerCards({customer}) {
                 <Divider/>
 
                 <CardActions sx={{justifyContent: 'flex-end', p: 2}}>
-                    <Button size="small" component="a" href={`/clients/${customer.id}`}>
+                    <Button size="small" component="a"  onClick={() => {
+
+                        localStorage.setItem('userName', JSON.stringify(customerForm));
+                        navigate(`/dashboard-garage/clients/${customer.id}`)}}>
                         Voir plus
                     </Button>
                 </CardActions>

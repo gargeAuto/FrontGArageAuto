@@ -16,7 +16,7 @@ import {
 import {Visibility, VisibilityOff, Lock} from "@mui/icons-material";
 import {Link as RouterLink, useLocation, useNavigate} from "react-router";
 import {UserContexte} from "../AllContexte/UserContexte.tsx";
-import api from "../api.ts";
+import api from "../api/api.ts";
 import {getUserRole} from "../configue/auth.tsx";
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

@@ -13,6 +13,7 @@ import LayoutWithoutFooter from "./Layout/admin/LayoutWithoutFooter.tsx";
 import DashboardGaragisteEmployee from "./pages/DashboardGaragisteEmployee.tsx";
 import DashboardGaragisteAgenda from "./pages/DashboardGaragisteAgenda.tsx";
 import DashboardGaragisteClients from "./pages/DashboardGaragisteClients.tsx";
+import ShowDetailsAboutOneUser from "./pages/ShowDetailsAboutOneUser.tsx";
 
 
 const router = createBrowserRouter([
@@ -20,20 +21,6 @@ const router = createBrowserRouter([
     {
         path: "validation-email",
         element: <EmailValidation/>,
-    },
-    {
-        path: "/dashboard-garage",
-        element: <LayoutWithoutFooter/>,
-        children: [
-            {
-                path: "", element: <ProtectedRoute role={"admin"}>
-                    <LayoutWithoutFooter/>
-                    <DashboardGaragiste/>
-                </ProtectedRoute>,
-            }
-        ],
-
-
     },
     {
         //loader: , // données préchargées avant rendu
@@ -61,7 +48,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "dashboard-garage",
-                element: <DashboardGaragiste/>,
+                element: <DashboardGaragiste/>
             },
             {
                 path: "dashboard-garage/employee",
@@ -74,6 +61,10 @@ const router = createBrowserRouter([
             {
                 path: "dashboard-garage/clients",
                 element: <DashboardGaragisteClients/>,
+            },
+            {
+                path: "dashboard-garage/clients/:id",
+                element: <ShowDetailsAboutOneUser/>,
             }
         ],
     },

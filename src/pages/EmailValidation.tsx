@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Box, Typography, CircularProgress, Alert, Container, Card, CardContent} from "@mui/material";
-import api from "../api"; // ton axios configuré
+import api from "../api/api.ts"; // ton axios configuré
 
 export default function EmailValidation() {
     const location = useLocation();
