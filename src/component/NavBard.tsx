@@ -42,15 +42,18 @@ const NavBard = ({children}) => {
                               transition: 'background-color 1s ease',
                               color: '#fff',
                               fontFamily: 'Inter, sans-serif'}}>
-            <Toolbar sx={{justifyContent: 'space-between'}}>
-                <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>
+            <Toolbar sx={{justifyContent: "space-between", alignItems: "center"}}>
+
+                {/* Zone gauche : logo */}
+                <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
                     <Box
                         component="img"
                         src={logoNavbard}
                         alt="logo"
                         onClick={() => {
                             const path = getUserRole() === "admin" ? "/dashboard-garage" : "/";
-                            if (location.pathname !== path) navigate(path);}}
+                            if (location.pathname !== path) navigate(path);
+                        }}
                         sx={{
                             width: 70,
                             height: 70,
@@ -62,22 +65,26 @@ const NavBard = ({children}) => {
                             transition: "all 0.3s ease",
                             "&:hover": {
                                 transform: "scale(1.05)",
-                                boxShadow: "0 0 15px rgba(255,255,255,0.5)",
-                            },
+                                boxShadow: "0 0 15px rgba(255,255,255,0.5)"
+                            }
                         }}
                     />
-
-                    {children}
-
-
                 </Box>
-                {
-                    isLogUser ? <UserMenu></UserMenu> : <Box>
+
+                {/* Zone centre : children */}
+                <Box sx={{flex: 1, display: "flex", justifyContent: "center"}}>
+                    {children}
+                </Box>
+
+                {/* Zone droite : user menu ou boutons */}
+                {isLogUser ? (
+                    <UserMenu/>
+                ) : (
+                    <Box>
                         <Button color="inherit" onClick={() => navigate("/Register-Form")}>Register</Button>
                         <Button color="inherit" onClick={() => navigate("/Login-Form")}>Login</Button>
                     </Box>
-                }
-
+                )}
             </Toolbar>
         </CustomAppBar>
     )

@@ -100,24 +100,32 @@ export default function DashboardAppointmentsGrid({appointments = []}) {
     ];
 
     return (
-        <Box sx={{display: "flex", flexDirection: "column" , alignItems: "center", }}>
+        <Box sx={{display: "flex", flexDirection: "column", alignItems: "center"}}>
             <Stack sx={{display: "flex", flexDirection: "row", alignItems: "center", mb: 2}}>
                 <Typography variant="h5">Rendez-vous aujourd'hui</Typography>
-                <Stack >
+                <Stack>
                     <Chip label={`${rows.length} résultats`} variant="outlined"/>
                 </Stack>
             </Stack>
 
-            <Paper sx={{height: 480, borderRadius: 3, overflow: "hidden", boxShadow: 2}}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    getRowId={(r) => r.appointment_id ?? ""}
-                    sx={{border: "none"}}
-                    initialState={{pagination: {paginationModel: {pageSize: 8}}}}
-                    pageSizeOptions={[5, 8, 12, 24]}
-                />
-            </Paper>
+            {rows.length === 0 ? (
+                <Paper sx={{p: 4, borderRadius: 3, boxShadow: 2}}>
+                    <Typography variant="h6" sx={{opacity: 0.7}}>
+                        Aucun rendez-vous aujourd'hui
+                    </Typography>
+                </Paper>
+            ) : (
+                <Paper sx={{height: 480, borderRadius: 3, overflow: "hidden", boxShadow: 2}}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        getRowId={(r) => r.appointment_id ?? ""}
+                        sx={{border: "none"}}
+                        initialState={{pagination: {paginationModel: {pageSize: 8}}}}
+                        pageSizeOptions={[5, 8, 12, 24]}
+                    />
+                </Paper>
+            )}
         </Box>
     );
 }
